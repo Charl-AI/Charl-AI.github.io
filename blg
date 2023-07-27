@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+# blg is for building, serving, and managing my personal blog
+# Inspired by https://ekiim.xyz/blog/entries/blog-with-pandoc-and-git/
+
+display_help(){
+  echo ""
+  echo "blg manages your personal blog"
+  echo "Depends on pandoc and python3 (for --serve)"
+  echo ""
+  echo "By default the output directory for the site is set to ./build"
+  echo "You can change this by setting the environment variable BUILD_DIR"
+  echo ""
+  echo "Usage: blg [ -b | --build | -c | --clean | -s | --serve | -h | --help ]"
+  echo ""
+  echo "Options:"
+  echo "  -b, --build       Build the blog to BUILD_DIR (N.B. cleans BUILD_DIR first)"
+  echo "  -c, --clean       Clean (i.e. rm -rf) the BUILD_DIR"
+  echo "  -s, --serve       Serve BUILD_DIR on localhost"
+  echo "  -h, --help        Display this help message"
+}
+
+if [[ "$1" == "-h" || "$1" == "--help" ]] || [[ $# -eq 0 ]]; then
+    display_help
+    exit 0
+fi
+
+BUILD_DIR=${BUILD_DIR:-./build}
+
+if [[ "$1" == "-s" || "$1" == "--serve" ]]; then
+  python3 -m http.server --directory $BUILD_DIR
+  exit 0
+fi
+
+if [[ "$1" != "-b" && "$1" != "--build" && "$1" != "-c" && "$1" != "--clean" ]]; then
+  echo "Unrecognized argument: $1, see --help for usage"
+  exit 1
+fi
+
+echo "Cleaning $BUILD_DIR"
+rm -rf $BUILD_DIR
+
+if [[ "$1" == "-c" || "$1" == "--clean" ]]; then
+  #skip building if only cleaning
+  exit 0
+fi
+
+# BUILD THE BLOG
+pages=()
+
+# simply find all markdown files in src
+readarray -d '' pages_found < <(find "src" -maxdepth 3 -type f -name "*.md" -print0;)
+pages+=("${pages_found[@]}")
+
+num_entries=${#pages_found[@]}
+echo "Found $num_entries pages in src/"
+echo "${pages[@]}"
+
+for page in "${pages[@]}"; do
+  echo "Building $page"
+  # output file has html extension and no src/ prefix
+  new_page="${page%.md}.html"
+  new_page="${new_page#src/}"
+
+  directory=$(dirname -- "$new_page")
+  mkdir -p "$BUILD_DIR/$directory"
+
+  # copy any assets to the build directory if they exist
+  cp -r "src/$directory/assets" "$BUILD_DIR/$directory/assets" 2>/dev/null
+
+  # build the page
+  pandoc "$page" -o "$BUILD_DIR/$new_page" --webtex --template=templates/default.html --metadata-file metadata.yaml
+done
+exit 0
+
