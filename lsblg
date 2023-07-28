@@ -1,0 +1,100 @@
+#!/bin/bash
+
+# lsblg is for listing all blog posts in a directory
+
+display_help(){
+  echo ""
+  echo "lsblg generates a markdown-formatted list of blog posts"
+  echo ""
+  echo "Looks for all *.md files in src/blog/*/ then extracts and"
+  echo "prints the metadata in each file in reverse chronological order."
+  echo ""
+  echo "Assumes metada is structured at top of markdown file like so:"
+  echo ""
+  echo "---"
+  echo "title: My Blog Post"
+  echo "subtitle: A short description of my blog post"
+  echo "date: 2020-01-13"
+  echo "word_count: 1234 words ~ 5 min read"
+  echo "---"
+  echo "Example Usage:"
+  echo ""
+  echo "lsblg                        # prints to stdout"
+  echo "lsblg > src.blog/index.md    # generates blog listing for website"
+}
+
+
+extract_metadata() {
+  local markdown_file="$1"
+
+  if [ ! -f "$markdown_file" ]; then
+    echo "File not found: $markdown_file"
+    return 1
+  fi
+
+  # extract the metadata between the first two '---' occurrences
+  awk -v RS='' '/^---\n/ && /\n---$/ {print; exit}' "$markdown_file" | sed '1d;$d'
+}
+
+process_blog_posts() {
+  local -A posts_by_date  # hashmap
+
+  # Find all markdown files in src/blog/*/
+  readarray -d '' pages_found < <(find "src/blog" -mindepth 2 -maxdepth 2 -type f -name "*.md" -print0)
+  pages+=("${pages_found[@]}")
+
+  # Loop through the found markdown files
+  for page in "${pages[@]}"; do
+    metadata=$(extract_metadata "$page")
+
+    if [ -n "$metadata" ]; then
+      date=$(echo "$metadata" | grep -oP 'date:\s*\K.+')
+      if [ -n "$date" ]; then
+        # Use the file path as the key and date as the value in the hashmap
+        posts_by_date["$page"]="$date"
+      fi
+    fi
+  done
+
+    # Sort the associative array by date (newest first)
+    sorted_dates=($(for date in "${posts_by_date[@]}"; do echo "$date"; done | sort -r))
+
+    num_entries=${#pages_found[@]}
+    echo "# Blog"
+    echo ""
+
+    # Loop through the sorted dates and print metadata accordingly
+    for date in "${sorted_dates[@]}"; do
+      for page in "${!posts_by_date[@]}"; do
+        if [ "${posts_by_date[$page]}" = "$date" ]; then
+          metadata=$(extract_metadata "$page")
+          title=$(echo "$metadata" | grep -E 'title' | grep -Ev 'subtitle' | sed 's/title: //')
+          subtitle=$(echo "$metadata" | grep -E 'subtitle' | sed 's/subtitle: //')
+          date=$(echo "$metadata" | grep -E 'date' | sed 's/date: //')
+          word_count=$(echo "$metadata" | grep -E 'word_count' | sed 's/word_count: //')
+          
+          page=${page#src/blog/} # strip src/blog prefix
+          page=${page%/index.md}
+
+          echo "---"
+          echo ""
+          echo "## [${title}](${page})"
+          echo ""
+          echo "$subtitle"
+          echo ""
+          echo "*$date*"
+          echo ""
+          echo "*$word_count*"
+          echo ""
+        fi
+      done
+    done
+}
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  display_help
+  exit 0
+fi
+
+process_blog_posts
+
