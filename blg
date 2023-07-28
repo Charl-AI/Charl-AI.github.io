@@ -82,7 +82,7 @@ echo "Found $num_entries pages in src/"
 echo "${pages[@]}"
 
 for page in "${pages[@]}"; do
-  echo "Building $page"
+  ( 
   # output file has html extension and no src/ prefix
   new_page="${page%.md}.html"
   new_page="${new_page#src/}"
@@ -90,11 +90,17 @@ for page in "${pages[@]}"; do
   directory=$(dirname -- "$new_page")
   mkdir -p "$BUILD_DIR/$directory"
 
-  # copy any assets to the build directory if they exist
-  cp -r "src/$directory/assets" "$BUILD_DIR/$directory/assets" 2>/dev/null
+  # build the page 
+  # --katex looks nicest, but you can use --mathjax for a faster build
+  pandoc "$page" -o "$BUILD_DIR/$new_page" \
+    --mathjax \
+    --template=default.html \
+    --metadata-file metadata.yaml \
+    --embed-resources
 
-  # build the page
-  pandoc "$page" -o "$BUILD_DIR/$new_page" --webtex --template=templates/default.html --metadata-file metadata.yaml
+  echo "Built $page"
+  ) & # process all pages in parallel
 done
+wait # wait for all pages to be built
 exit 0
 
