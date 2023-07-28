@@ -12,7 +12,7 @@ Friends don't let friends develop in unreproducible environments.
 
 ---
 
-## [Exponential Moving Average Filter Using Only Addition and Bit Shift](filters)
+## [An Exponential Moving Average Filter Using Only Addition and Bit Shift](filters)
 
 Or how I learned to stop worrying and love the bomb disposal robot.
 
