@@ -32,9 +32,31 @@ $endif$
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
+<link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap" rel="stylesheet">
+<style>
+body {
+  text-align: justify; 
+  font-family: "Roboto", sans-serif;
+  line-height: 1.5; 
+  hyphens: auto;
+}
+h1,h2,h3,h4,h5,h6 {font-family: "Roboto Mono", monospace;}
+.sourceCode {font-family: "Roboto Mono", monospace;}
+.navbar {
+  font-family: "Roboto Mono", monospace; 
+  background-color: #003E74; 
+  font-size: 2em;
+}
+.footer {
+  font-family: "Roboto Mono", monospace; 
+  background-color: #003E74; 
+  font-size: 1em;
+}
+
+</style>
 </head>
-<div class="navbar" style="background-color: #003E74; font-size: 25px;">
-  <div style="color: white;">
+<div class="navbar">
+  <div style="color:white;">
     <a href="/" style="color: white;">Home</a> | <a href="/blog" style="color: white;">Blog</a>
   </div>
   <!-- more navigation bar items here -->
@@ -50,7 +72,10 @@ $endif$
 $endif$
 <main>
 $if(date)$
-<p class="date">$date$</p>
+<p class="date"><i>$date$</i></p>
+$endif$
+$if(word_count)$
+<p class="word_count"><i>$word_count$</i></p>
 $endif$
 $body$
 </main>
@@ -58,13 +83,13 @@ $for(include-after)$
 $include-after$
 $endfor$
 </body>
-<div class="footer" style="background-color: #003E74; font-size: 20px;">
+<div class="footer">
   <div style="color: white;">
     Contact: <a href="https://github.com/Charl-AI" style="color: white;">[GitHub]</a> 
-    | <a href="https://scholar.google.com/citations?user=4PLajkUAAAAJ&hl=en" style="color: white;">[Google-Scholar]</a>
-    | <a href="https://www.linkedin.com/in/charles-jones1917/" style="color: white;">[LinkedIn]</a>
-    | <a href="mailto:cj1917@ic.ac.uk" style="color: white;">[Mail]</a>
-    | <a href="https://twitter.com/home" style="color: white;">[Twitter]</a>
+    <a href="https://scholar.google.com/citations?user=4PLajkUAAAAJ&hl=en" style="color: white;">[Scholar]</a>
+    <a href="https://www.linkedin.com/in/charles-jones1917/" style="color: white;">[LinkedIn]</a>
+    <a href="mailto:cj1917@ic.ac.uk" style="color: white;">[Mail]</a>
+    <a href="https://twitter.com/home" style="color: white;">[Twitter]</a>
   </div>
   <!-- more navigation bar items here -->
 </div>
