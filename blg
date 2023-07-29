@@ -43,6 +43,7 @@ display_help(){
   echo "  -c, --clean       Clean (i.e. rm -rf) the BUILD_DIR"
   echo "  -s, --serve       Serve BUILD_DIR on localhost"
   echo "  -h, --help        Display this help message"
+  echo ""
 }
 
 if [[ "$1" == "-h" || "$1" == "--help" ]] || [[ $# -eq 0 ]]; then
@@ -93,7 +94,7 @@ for page in "${pages[@]}"; do
   # build the page 
   # --katex looks nicest, but you can use --mathjax for a faster build
   pandoc "$page" -o "$BUILD_DIR/$new_page" \
-    --mathjax \
+    --katex \
     --template=default.html \
     --metadata-file metadata.yaml \
     --embed-resources

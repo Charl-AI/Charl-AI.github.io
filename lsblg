@@ -21,6 +21,7 @@ display_help(){
   echo ""
   echo "lsblg                        # prints to stdout"
   echo "lsblg > src.blog/index.md    # generates blog listing for website"
+  echo ""
 }
 
 
