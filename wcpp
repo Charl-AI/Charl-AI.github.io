@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# wc-plus-plus: a simple wrapper around wc -w
+
+display_help(){
+  echo ""
+  echo "wcpp generates a pretty summary of word count and reading time."
+  echo "If no file is given, and fzf is installed, it can be used as a file picker"
+  echo ""
+  echo "Reading time is simply (word_count / 250) minutes"
+  echo ""
+  echo "Usage: wcpp [FILE][ -h | --help ]"
+  echo ""
+  echo "Examples:"
+  echo ""
+  echo "wcpp my_file.md    #  prints to stdout > x words ~y minute read"
+  echo "wcpp               #  use fzf for selecting input file if available"
+  echo "wcpp --help        #  display this help message"
+  echo ""
+}
+
+if command -v fzf &>/dev/null; then
+  fzf_installed=true
+else
+  fzf_installed=false
+fi
+
+if [[ "$#" -eq 0 && "$fzf_installed" == false ]] || [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  display_help
+  exit 0
+fi
+
+if [[ "$#" -eq 0 && "$fzf_installed" == true ]]; then
+  file=$(fzf)
+else
+  file="$1"
+fi
+
+count="$(wc -w < "$file") words ~$(( $(wc -w < "$file") / 250 )) minute read"
+echo $count
