@@ -17,6 +17,14 @@ We also include a helper script `lsblg` which finds all blog posts, extracts met
 lsblg > src/blog/index.md
 ```
 
+To build the blog and ensure that the index is up to date:
+
+```bash
+./lsblg > src/blog/index.md && ./blg -b
+```
+
+There is one final helper script `wcpp` which pretty prints a word count and reading time summary for each post.
+
 ## To create a new blog post
 
 1. Create the markdown file in `src/blog/new_post_short_name/index.md`
