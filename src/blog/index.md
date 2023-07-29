@@ -8,7 +8,7 @@ Friends don't let friends develop in unreproducible environments.
 
 *2022-01-20*
 
-*3757 words ~16 minute read*
+*3762 words ~15 minute read*
 
 ---
 
@@ -18,7 +18,7 @@ Or how I learned to stop worrying and love the bomb disposal robot.
 
 *2021-11-14*
 
-*891 words ~4 minute read*
+*892 words ~3 minute read*
 
 ---
 
@@ -28,5 +28,5 @@ AI does my machine learning coursework for me! Achieve the singularity with this
 
 *2021-08-28*
 
-*1035 words ~5 minute read*
+*1000 words ~4 minute read*
 
