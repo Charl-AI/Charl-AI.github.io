@@ -16,7 +16,7 @@ This post is accompanied by a [repo with the examples shown in this post](https:
 [VScode Devcontainers](#devcontainers)\
 [Miscellaneous: Tips & Tricks, Gotchas, Limitations, and Workarounds](#gotcha)
 
-# Why Containerise Development Environments? <a name="intro"></a>
+## Why Containerise Development Environments? <a name="intro"></a>
 
 The environments we use for GPU-accelerated deep learning research are fragile. They rely on a web of dependencies between the CUDA toolkit, GPU driver, OS, Python version, and Python dependencies. The current standard practice is to use python virtual environments and a `requirements.txt` file to manage dependencies, but this only pins the versions of the python packages used and does nothing to manage the rest of the technology stack we are building on. This makes our environments extremely fragile. How many hours do you think you spend each year fixing broken environments? How many times have you struggled to reproduce papers even if the authors were kind enough to provide a requirements file? Not convinced? Try this: delete the current project you're working on and try to set it up again on a coworker's machine. How long do you think it will take before you become productive on the new machine?
 
@@ -26,7 +26,7 @@ The above figure shows the technology stack that deep learning projects typicall
 
 Containers are a great solution to this problem. They can be thought of as a lightweight alternative to virtual machines and allow the entire technology stack for a project to be reproduced - they also do not preclude you from using any of the other technologies we have mentioned so far. The best solution I have found is to use Docker containers + VScode devcontainer features + Python virtualenv (inside the container). This setup even allows people to reproduce the entire development environment in one click! This article is an introduction to the ideas behind this.
 
-# Devcontainers Suggested Structure <a name="manifesto"></a>
+## Devcontainers Suggested Structure <a name="manifesto"></a>
 
 Before diving into the details of how containers work, I think it's first best to demonstrate how this new workflow will fit into your repository. **The only change you will need to make to your current project is to add a `.devcontainer` directory** with two specific files in it. These files are a `Dockerfile` which tells docker how to build the image (specifying details about the OS, CUDA, Python version etc) and a `devcontainer.json` file which tells VScode how to create/access the container with any tools you want to use in the project. These are explained further in the next sections.
 
@@ -65,7 +65,7 @@ The key principle behind this file structure is incremental buy-in. For example,
 
 **Notice that there is still one thing that the user must check - their GPU capability**. Unfortunately, there is no simple way to make all code run on all GPUs because some hardware simply has different capabilities. Generally, I would recommend picking a minimum CUDA version that you want your project to support (it is common to pick either 10.2 or 11.3) and using your Dockerfile to enforce this (I'll explain how later). You can then guarantee that anyone whose hardware supports this version can perfectly reproduce your project - those who don't can use a virtual environment and they are no worse off than they would have been otherwise. This is the only compatibility that the user needs to think about and it is made explicit by using containers.
 
-# Anatomy of Docker and Dockerfiles <a name="dockerfile"></a>
+## Anatomy of Docker and Dockerfiles <a name="dockerfile"></a>
 
 Docker is the most popular system for building containers and is the one we focus on today. We will use Nvidia's container runtime which allows GPUs to be visible inside Docker containers. To install Docker with the Nvidia container runtime, follow the official instructions [here](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker).
 
@@ -125,7 +125,7 @@ RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requ
 
 *Note, most dockerfiles end with a `CMD` line which specifies what command to run when the container starts, this could be running the application or simply running bash. This is not included in this example because you do not need that line when using VScode devcontainers. If you want to use the Dockerfile without VScode devcontainers, you will need to add this line.*
 
-# VScode Devcontainers <a name="devcontainers"></a>
+## VScode Devcontainers <a name="devcontainers"></a>
 
 Docker containers are great for ensuring a consistent environment but there's an issue with using them on their own - Docker is mostly designed for deployment, not development. You *could* spin up a container, SSH into it, mount your data and source code, forward any necessary ports, and do your development through the terminal but that would not be fun. Fortunately, VScode has a brilliant feature called Devcontainers which does those steps for you and also attaches a VScode window to the container. This allows you to develop seamlessly using the remote development features of VScode and gives you the same experience as any local project. To use this, simply ensure you have the [Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) installed. The [VScode docs](https://code.visualstudio.com/docs/remote/create-dev-container) are very good and are worth reading but the main thing to understand is that you can use a `devcontainer.json` file to tell VScode how to build the container - an annotated example file is shown below, and the reference docs can be found [here](https://code.visualstudio.com/docs/remote/devcontainerjson-reference):
 
@@ -181,7 +181,7 @@ Notice also that you can specify any settings and extensions you want to set up 
 A nice feature of VScode devcontainers is one-click installation of projects, simply run `Remote containers: Clone Repository in Container Volume` from the command palette (alternatively, clone the repository normally and run `Remote Containers: Open folder in Container`) and you're done! There is a minor difference between these two methods - the first stores your source code in a volume (essentially a filesystem that only Docker can access), whereas the second method involves storing the code in your local filesystem and mounting it to the container. On Linux, there is generally not much difference between these options, but on Windows/MacOS, volumes are generally a bit more performant.
 
 
-# Miscellaneous: Tips & Tricks, Gotchas, Limitations, and Workarounds <a name="gotcha"></a>
+## Miscellaneous: Tips & Tricks, Gotchas, Limitations, and Workarounds <a name="gotcha"></a>
 
 - **How do I make my containers work on SLURM?** In general, containers are great for scaling and distributing computation (e.g. Kubernetes), however, SLURM is not perfectly set up for this. I think there are ways of making containers and SLURM work together but I am not an expert on it at this time. A common workflow is to prototype on a GPU machine, then use SLURM for running large jobs/hyperparameter sweeps etc. Even if you cannot use containers on SLURM, it is still advantageous to use containers for prototyping because you can set up your containers to be identical to the SLURM cluster, hence reducing friction when you want to scale up.
 
