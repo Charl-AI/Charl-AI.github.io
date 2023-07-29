@@ -1,96 +1,75 @@
 <!DOCTYPE html>
-<!-- <html xmlns="http://www.w3.org/1999/xhtml" lang="$lang$" xml:lang="$lang$"$if(dir)$ dir="$dir$"$endif$> -->
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-$for(author-meta)$
-  <meta name="author" content="$author-meta$" />
-$endfor$
-$if(date-meta)$
-  <meta name="dcterms.date" content="$date-meta$" />
-$endif$
-$if(keywords)$
-  <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$" />
-$endif$
-$if(description-meta)$
-  <meta name="description" content="$description-meta$" />
-$endif$
-  <title>$if(title-prefix)$$title-prefix$ – $endif$$pagetitle$</title>
+  $if(title)$
+  <title>$title$</title>
+  $endif$
+  $if(subtitle)$
+  <meta name="description" content="$subtitle$">
+  $endif$
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap" rel="stylesheet">
   <style>
     $styles.html()$
+    body {
+      text-align: justify; 
+      font-family: "Roboto", sans-serif;
+      line-height: 1.5; 
+      hyphens: auto;
+    }
+    h1,h2,h3,h4,h5,h6 {text-align:left; font-family: "Roboto Mono", monospace;}
+    h1.title {text-align:center; font-family: "Roboto Mono", monospace;}
+    .sourceCode {font-family: "Roboto Mono", monospace;}
+    .navbar {
+      font-family: "Roboto Mono", monospace; 
+      background-color: #003E74; 
+      font-size: 2em;
+      color: white;
+    }
+    .navbar a {color: white;}
+    .footer {
+      font-family: "Roboto Mono", monospace; 
+      background-color: #003E74; 
+      font-size: 1em;
+      color: white;
+    }
+    .footer a {color: white;}
   </style>
-$for(css)$
-  <link rel="stylesheet" href="$css$" />
-$endfor$
-$for(header-includes)$
-  $header-includes$
-$endfor$
-$if(math)$
-  $math$
-$endif$
+  $if(math)$
+    $math$
+  $endif$
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
-<link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap" rel="stylesheet">
-<style>
-body {
-  text-align: justify; 
-  font-family: "Roboto", sans-serif;
-  line-height: 1.5; 
-  hyphens: auto;
-}
-h1,h2,h3,h4,h5,h6 {font-family: "Roboto Mono", monospace;}
-.sourceCode {font-family: "Roboto Mono", monospace;}
-.navbar {
-  font-family: "Roboto Mono", monospace; 
-  background-color: #003E74; 
-  font-size: 2em;
-}
-.footer {
-  font-family: "Roboto Mono", monospace; 
-  background-color: #003E74; 
-  font-size: 1em;
-}
-
-</style>
 </head>
-<div class="navbar">
-  <div style="color:white;">
-    <a href="/" style="color: white;">Home</a> | <a href="/blog" style="color: white;">Blog</a>
-  </div>
-  <!-- more navigation bar items here -->
-</div>
 <body>
-$if(title)$
-<header id="title-block-header">
-<h1 class="title">$title$</h1>
-$if(subtitle)$
-<p class="subtitle">$subtitle$</p>
-$endif$
-</header>
-$endif$
-<main>
-$if(date)$
-<p class="date"><i>$date$</i></p>
-$endif$
-$if(word_count)$
-<p class="word_count"><i>$word_count$</i></p>
-$endif$
-$body$
-</main>
-$for(include-after)$
-$include-after$
-$endfor$
-</body>
-<div class="footer">
-  <div style="color: white;">
-    Contact: <a href="https://github.com/Charl-AI" style="color: white;">[GitHub]</a> 
-    <a href="https://scholar.google.com/citations?user=4PLajkUAAAAJ&hl=en" style="color: white;">[Scholar]</a>
-    <a href="https://www.linkedin.com/in/charles-jones1917/" style="color: white;">[LinkedIn]</a>
-    <a href="mailto:cj1917@ic.ac.uk" style="color: white;">[Mail]</a>
-    <a href="https://twitter.com/c_jones_ai" style="color: white;">[Twitter]</a>
+  <div class="navbar">
+    <a href="/">Home</a> | <a href="/blog">Blog</a>
   </div>
-  <!-- more navigation bar items here -->
-</div>
+  $if(title)$
+  <header id="title-block-header">
+    <h1 class="title">$title$</h1>
+    $if(subtitle)$
+    <p class="subtitle">$subtitle$</p>
+    $endif$
+  </header>
+  $endif$
+  <main>
+    $if(date)$
+    <p class="date"><i>$date$</i></p>
+    $endif$
+    $if(word_count)$
+    <p class="word_count"><i>$word_count$</i></p>
+    $endif$
+    $body$
+  </main>
+  <div class="footer">
+    Contact: <a href="https://github.com/Charl-AI">[GitHub]</a> 
+    <a href="https://scholar.google.com/citations?user=4PLajkUAAAAJ&hl=en">[Scholar]</a>
+    <a href="https://www.linkedin.com/in/charles-jones1917/">[LinkedIn]</a>
+    <a href="mailto:cj1917@ic.ac.uk">[Mail]</a>
+    <a href="https://twitter.com/c_jones_ai">[Twitter]</a>
+  </div>
+</body>
 </html>
