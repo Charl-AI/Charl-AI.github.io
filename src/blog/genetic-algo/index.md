@@ -2,7 +2,7 @@
 title: Automating my Coursework with a Genetic Algorithm
 subtitle: AI does my machine learning coursework for me! Achieve the singularity with this one weird trick! 
 date: 2021-08-28
-word_count: 1035 words ~5 minute read
+word_count: 1000 words ~4 minute read
 ---
 
 

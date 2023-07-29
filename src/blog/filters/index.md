@@ -2,7 +2,7 @@
 title: An Exponential Moving Average Filter Using Only Addition and Bit Shift
 subtitle: Or how I learned to stop worrying and love the bomb disposal robot.
 date: 2021-11-14
-word_count: 891 words ~4 minute read
+word_count: 892 words ~3 minute read
 ---
 
 This post is about a mathematical trick I found for implementing digital signal processing filters in compute-constrained environments. I derived it during my undergrad, during a module on embedded C for microcontrollers. The code can be found [here][ecm-link]. I was pretty new to C programming at the time, so the quality isn't great, however I remain proud of this trick.

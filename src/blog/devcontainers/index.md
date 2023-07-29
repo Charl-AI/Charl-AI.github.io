@@ -2,7 +2,7 @@
 title: Devcontainers Diminish Dependency Difficulties in Deep Learning
 date: 2022-01-20
 subtitle: Friends don't let friends develop in unreproducible environments.
-word_count: 3757 words ~16 minute read
+word_count: 3762 words ~15 minute read
 ---
 
 This post walks you through the basics of using Docker (optionally with VScode Devcontainers) to create reproducible Deep Learning project environments. I first provide some motivation as to why this is a good idea, then explain the design principles that I believe projects should follow in order to improve environment reproducibility. I then give a brief description of relevant docker concepts for deep learning, explain how dockerfiles work, and introduce VScode devcontainers which include some useful features. The post finishes by listing some miscellaneous gotchas, limitations, and tips.
