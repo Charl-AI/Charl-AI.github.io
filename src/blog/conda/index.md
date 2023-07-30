@@ -1,5 +1,5 @@
 ---
-title: Lazy-loading conda for faster shell startup
+title: Lazy-Loading Conda for Faster Shell Startup
 subtitle: Plus a bonus trick for switching envs.
 date: 2023-07-30
 word_count: 421 words ~1 minute read

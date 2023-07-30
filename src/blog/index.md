@@ -2,7 +2,7 @@
 
 ---
 
-## [Lazy-loading conda for faster shell startup](conda)
+## [Lazy-Loading Conda for Faster Shell Startup](conda)
 
 Plus a bonus trick for switching envs.
 
