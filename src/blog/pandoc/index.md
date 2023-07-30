@@ -20,7 +20,7 @@ _Note: web development is well outside my area of expertise, so this post is adm
 [How to structure your blog](#2)\
 [`blg`: the beating heart of this project](#3)\
 [HTML styling and metadata](#4)\
-[Bonus: auto generate blog index with `lsblg`](#5)
+[Bonus: auto generate blog index with `lsblg`](#5)\
 [Bonus: serving on localhost](#6)\
 [Bonus: deploying to GitHub pages](#7)\
 [Conclusions](#8)

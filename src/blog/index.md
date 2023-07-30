@@ -8,7 +8,7 @@ For people who are allergic to frameworks.
 
 *2023-07-29*
 
-*X words ~Y minute read*
+*1462 words ~5 minute read*
 
 ---
 
