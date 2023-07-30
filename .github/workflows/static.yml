@@ -29,8 +29,16 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Download Latest Release
+        uses: robinraju/release-downloader@v1.8
+        with:
+          latest: true
+          fileName: "build.zip"
+      - name: Unzip Release
+        run: | 
+          unzip ./build.zip
+          ls
+          ls ./build
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
