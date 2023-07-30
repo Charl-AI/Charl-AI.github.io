@@ -2,6 +2,16 @@
 
 ---
 
+## [A Tiny Static Site Generator with Pandoc and Bash](pandoc)
+
+For people who are allergic to frameworks.
+
+*2023-07-29*
+
+*X words ~Y minute read*
+
+---
+
 ## [Devcontainers Diminish Dependency Difficulties in Deep Learning](devcontainers)
 
 Friends don't let friends develop in unreproducible environments.

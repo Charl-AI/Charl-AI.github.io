@@ -5,4 +5,4 @@ I am a Computer Science (machine learning) PhD student, advised by Ben Glocker a
 
 I occasionally write blog posts about side projects and things I've learned along my programming journey. If you're interested in discussing anything from this blog, consider reaching out (my contact details are in the footer). You can also create an issue on this website's [GitHub repo](https://github.com/Charl-AI/Charl-AI.github.io).
 
-This website is generated using only pandoc and a shell script. If you're interested in finding out more, check out the blog post I wrote about it!
+This website is generated using only pandoc and a shell script. If you're interested in finding out more, check out the [blog post](/blog/pandoc) I wrote about it!
