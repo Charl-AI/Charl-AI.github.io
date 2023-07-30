@@ -44,3 +44,7 @@ word_count: X words ~Y minute read
 5. Run `./scripts/lsblg > src/blog/index.md` to update list of posts
 6. Build blog with `./scripts/blg -b`
 7. View changes locally with `./scripts/blg -s`
+
+## To publish the site
+
+Upload a `.zip` version of the `build/` directory as a GitHub release. There is an actions workflow that will automatically publish this.
