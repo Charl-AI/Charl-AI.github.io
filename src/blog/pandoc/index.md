@@ -185,11 +185,12 @@ python3 -m http.server --directory build/
 
 ## Bonus: deploying to GitHub pages
 
-If you want to host your site on github pages, like this one, you've basically got three options:
+If you want to host your site on GitHub pages, like this one, you've basically got three options:
 
-1. Build site locally, commit the final html to the repo
-2. Create a GitHub action to build the site remotely
-3. Build locally, upload the html as a GitHub release
+1. Build site locally, commit the final html to the repo. Let GitHub pages publish the `build/` dir
+2. Use a GitHub action to build and publish the site remotely.
+3. Build locally, upload the zipped html site as a GitHub release, publish using GitHub action.
 
+I prefer option 3. It allows me to build the site locally without checking it into version control. I wrote [this](https://github.com/Charl-AI/Charl-AI.github.io/blob/main/.github/workflows/static.yml) GitHub action to publish the site each time I upload a new version of the site to GitHub releases.
 
 ## Conclusions
