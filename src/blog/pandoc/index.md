@@ -7,15 +7,17 @@ word_count: X words ~Y minute read
 
 I recently decided to overhaul this website. The inciting incident came when, after over a year of not touching it, I tried to write a new post. The blog was being built with Jekyll and a template that I found online. When coming back to the repo, I realised that I had no idea how anything worked.
 
-In recent months, I have become more and more convinced by the Unix philosophy of small and modular command line programs. When looking at alternatives to Jekyll, such as Hugo, I despaired at the thought of having to learn a whole framework without fundamentally understanding what's happening.
+In recent months, I have become more and more convinced by the Unix philosophy and have enjoyed solving problems with small and modular shell scripts. When looking at alternatives to Jekyll, such as Hugo and Gatsby, I despaired at the thought of having to learn these massive frameworks without fundamentally understanding what's they're doing.
 
-Inspired by [this post](https://ekiim.xyz/blog/entries/blog-with-pandoc-and-git/), I developed a custom static site generator which builds this website. After reading this post, you will be able to too! 
+Inspired by [ekiim's blog](https://ekiim.xyz/blog/entries/blog-with-pandoc-and-git/), I developed a custom static site generator which builds this website. After reading this post, you will be able to too! 
+
+_Note: web development is well outside my area of expertise, so this post is admittedly pretty basic. It's the guide I wish I had before I started this project. The target audience is people like me who want to build simple, brutalist websites from scratch._
 
 ## What is a static site generator, actually?
 
 A static site is just a collection of html files. However, writing html directly is cumbersome, so most people prefer to write their content in a format like markdown. A static site generator simply compiles the markdown content into a collection of html pages to display. Notice that there's nothing special going on here -- all we need to do to make a basic static site generator is to wrap a document converter and add some convenience features.
 
-`pandoc` (the 'universal document converter') is great for this job. It can convert markdown to html, respecting code blocks, LaTeX-style maths, and embedded assets. It also lets you inject extra html and css for styling the output. For a basic example, try this:
+`pandoc` (the 'universal document converter') is great for this job. It can convert markdown to html, respecting code blocks, LaTeX-style maths, and embedded assets. It also lets you inject extra html and css for styling the output. For a basic example, try this (you can open the html file in your web browser):
 
 ```bash
 echo "# Here is some markdown" > example_post.md
@@ -35,11 +37,9 @@ We're going to make a script which maps all markdown files in your `src/` direct
 ├── README.md
 ├── src
 │   ├── blog
-│   │   ├── entry-01
-│   │   │   └── index.md
-│   │   ├── example-entry
+│   │   ├── example-post
 │   │   │   ├── assets
-│   │   │   │   └── pattern-1.jpeg
+│   │   │   │   └── fig-1.jpeg
 │   │   │   └── index.md
 │   │   └── index.md
 │   └── index.md
@@ -48,7 +48,148 @@ We're going to make a script which maps all markdown files in your `src/` direct
 └── default.html
 ```
 
-Notice that each page is called `index.md`, and lives in a directory with the actual name of the page. This is because it will be converted to `index.html`, which browsers will display when you navigate to the parent directory.
+We name each page of the website `index.md` -- when the site is built, they will be converted to `index.html`, which browsers will display by default when navigating to their parent directory. For example, the top level `index.md` file is your homepage and lives at the absolute root of the site once it's built. Inside your markdown files, you can link to pages like so: 
 
-## Finding and mapping
+```
+[This is a link to the homepage](/)
+[This is a link to the blog page](/blog)
+[This is a link to the example-post page](/blog/example-post)
+```
 
+We will be using the `--embed-resources` pandoc option to compile any images into the final html. You can include any assets in your markdown files using their actual location in the repo:
+
+```
+![alt-text](src/blog/example-post/assets/fig-1.jpg)
+```
+
+We will come to the `metadata.yml` and `default.html` files in a second, but first, let's focus on `blg`.
+
+## `blg`: the beating heart of this project
+
+The `blg` bash script does all the heavy lifting. Conceptually, it performs a tree map, converting all markdown files in `src/` to html files in `build/`. Since pandoc embeds the assets into the built html, we can simply skip over all non markdown files. The full script can be found here, but for brevity, I'll just show the important bit:
+
+```bash
+pages=()
+
+# simply find all markdown files in src
+readarray -d '' pages_found < <(find "src" -maxdepth 3 -type f -name "*.md" -print0;)
+pages+=("${pages_found[@]}")
+
+num_entries=${#pages_found[@]}
+echo "Found $num_entries pages in src/"
+echo "${pages[@]}"
+
+for page in "${pages[@]}"; do
+  ( 
+  # output file has html extension and no src/ prefix
+  new_page="${page%.md}.html"
+  new_page="${new_page#src/}"
+
+  # make the tree structure in build/ reflect the one in src/
+  directory=$(dirname -- "$new_page")
+  mkdir -p "./build/$directory"
+
+  # build the page 
+  # --katex makes math look best, but you can use --mathjax for a faster build
+  pandoc "$page" -o "./build/$new_page" \
+    --katex \
+    --template=default.html \
+    --metadata-file metadata.yaml \
+    --embed-resources
+
+  echo "Built $page"
+  ) & # process all pages in parallel
+done
+wait # wait for all pages to be built
+```
+
+There's not much else to say about this script. It does one thing, and does it well. You could always add the ability to skip bulding unchanged pages, however, I would consider this a premature optimisation (at the time of writing, this site has <10 pages, and builds instantly).
+
+## HTML styling and metadata
+
+`pandoc` allows us to inject metadata and html into our documents. The `metadata.yml` file specifies default values, which will be overridden by anything found in the header of your markdown files. In my blog, I chose to include the following metadata in each post:
+
+```markdown
+---
+title: post title
+subtitle: this is a subtitle
+date: YYYY/MM/DD
+word_count: X words ~Y minute read
+---
+This is the content of the markdown post,
+the bit above is the metadata header.
+```
+
+Once we've got this metadata about the posts, we can now write our `default.html` file, which styles the output. A bare minimum example is shown below, showing how to use the markdown metadata, as well as including a basic header bar.
+
+```html
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  $if(title)$
+  <title>$title$</title>
+  $endif$
+  $if(subtitle)$
+  <meta name="description" content="$subtitle$">
+  $endif$
+  <style>
+  <!--Custom CSS goes here-->
+  </style>
+  $if(math)$
+    $math$
+  $endif$
+</head>
+<body>
+  <div class="navbar">
+    | <a href="/">Home</a> | <a href="/blog">Blog</a> |
+  </div>
+  $if(title)$
+  <header id="title-block-header">
+    <h1 class="title">$title$</h1>
+    $if(subtitle)$
+    <p class="subtitle">$subtitle$</p>
+    $endif$
+  </header>
+  $endif$
+  <main>
+    $if(date)$
+    <p class="date"><i>$date$</i></p>
+    $endif$
+    $if(word_count)$
+    <p class="word_count"><i>$word_count$</i></p>
+    $endif$
+    $body$
+  </main>
+</body>
+</html>
+```
+
+This is all we need for a working website! You can now run the `blg` script with this html template and you're done. It will look pretty spartan at this point, so be sure to add some CSS in the `<style>` section.
+
+## Bonus: auto-generate blog index with `lsblg`
+
+For me, the `src/blog/index.md` file is pretty simple (just a reverse-chronological list of my blog posts, with their metadata displayed in a pretty way), however, it's a hassle to keep this up to date when you are changing posts.
+
+I solved this with the `lsblg` script, which auto-generates the blog index from your posts and metadata. You can find the script here, and run it with `./lsblg > src/blog/index.md`. 
+
+
+## Bonus: serving on localhost
+
+Simple. Just run this, no installation required:
+
+```bash
+python3 -m http.server --directory build/
+```
+
+## Bonus: deploying to GitHub pages
+
+If you want to host your site on github pages, like this one, you've basically got three options:
+
+1. Build site locally, commit the final html to the repo
+2. Create a GitHub action to build the site remotely
+3. Build locally, upload the html as a GitHub release
+
+
+## Conclusions
