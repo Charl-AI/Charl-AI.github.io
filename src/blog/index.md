@@ -2,6 +2,16 @@
 
 ---
 
+## [Lazy-loading conda for faster shell startup](conda)
+
+Plus a bonus trick for switching envs.
+
+*2023-07-30*
+
+*421 words ~1 minute read*
+
+---
+
 ## [A Tiny Static Site Generator with Pandoc and Bash](pandoc)
 
 For people who are allergic to frameworks.
