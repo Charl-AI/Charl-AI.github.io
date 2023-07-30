@@ -1,10 +1,10 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+# NB we expect the static html files to be zipped and 
+# uploaded to the latest github release
+name: Deploy GitHub Release content to Pages
 
 on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["main"]
+  release:
+    types: ["published"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -22,7 +22,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
@@ -37,8 +36,8 @@ jobs:
       - name: Unzip Release
         run: | 
           unzip ./build.zip
-          ls
-          ls ./build
+          echo "Success!"
+
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
