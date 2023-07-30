@@ -20,7 +20,7 @@ lsblg > src/blog/index.md
 To build the blog and ensure that the index is up to date:
 
 ```bash
-./lsblg > src/blog/index.md && ./blg -b
+./scripts/lsblg > src/blog/index.md && ./scripts/blg -b
 ```
 
 There is one final helper script `wcpp` which pretty prints a word count and reading time summary for each post.
@@ -40,7 +40,7 @@ word_count: X words ~Y minute read
 ```
 
 3. Write the post
-4. Find the word count with `wc -w path/to/host` -- divide by 230 to get a reading time estimate.
-5. Run `./lsblg > src/blog/index.md` to update list of posts
-6. Build blog with `./blg -b`
-7. View changes locally with `./blg -s`
+4. Find the word count and reading time with `./scripts/wcpp`
+5. Run `./scripts/lsblg > src/blog/index.md` to update list of posts
+6. Build blog with `./scripts/blg -b`
+7. View changes locally with `./scripts/blg -s`
