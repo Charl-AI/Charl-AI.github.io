@@ -2,7 +2,7 @@
 title: A Tiny Static Site Generator with Pandoc and Bash
 subtitle: For people who are allergic to frameworks.
 date: 2023-07-29
-word_count: X words ~Y minute read
+word_count: 1462 words ~5 minute read
 ---
 
 I recently decided to overhaul this website. The inciting incident came when, after over a year of not touching it, I tried to write a new post. The blog was being built with Jekyll and a template that I found online. When coming back to the repo, I realised that I had no idea how anything worked.
@@ -13,7 +13,21 @@ Inspired by [ekiim's blog](https://ekiim.xyz/blog/entries/blog-with-pandoc-and-g
 
 _Note: web development is well outside my area of expertise, so this post is admittedly pretty basic. It's the guide I wish I had before I started this project. The target audience is people like me who want to build simple, brutalist websites from scratch._
 
-## What is a static site generator, actually?
+---
+
+## Table of contents
+[What is a static site generator, actually](#1)\
+[How to structure your blog](#2)\
+[`blg`: the beating heart of this project](#3)\
+[HTML styling and metadata](#4)\
+[Bonus: auto generate blog index with `lsblg`](#5)
+[Bonus: serving on localhost](#6)\
+[Bonus: deploying to GitHub pages](#7)\
+[Conclusions](#8)
+
+---
+
+## What is a static site generator, actually? <a name="1"></a>
 
 A static site is just a collection of html files. However, writing html directly is cumbersome, so most people prefer to write their content in a format like markdown. A static site generator simply compiles the markdown content into a collection of html pages to display. Notice that there's nothing special going on here -- all we need to do to make a basic static site generator is to wrap a document converter and add some convenience features.
 
@@ -28,7 +42,7 @@ pandoc example_post.md -o example_post.html
 
 Believe it or not, we are 90% of the way there! Now, we just have to sort out how to apply this to a convert a markdown blog to a website.
 
-## How to structure your blog
+## How to structure your blog <a name="2"></a>
 
 We're going to make a script which maps all markdown files in your `src/` directory to html files in an output `build/` directory, respecting the tree structure. This works best if you structure your blog like so:
 
@@ -64,9 +78,9 @@ We will be using the `--embed-resources` pandoc option to compile any images int
 
 We will come to the `metadata.yml` and `default.html` files in a second, but first, let's focus on `blg`.
 
-## `blg`: the beating heart of this project
+## `blg`: the beating heart of this project <a name="3"></a>
 
-The `blg` bash script does all the heavy lifting. Conceptually, it performs a tree map, converting all markdown files in `src/` to html files in `build/`. Since pandoc embeds the assets into the built html, we can simply skip over all non markdown files. The full script can be found here, but for brevity, I'll just show the important bit:
+The `blg` bash script does all the heavy lifting. Conceptually, it performs a tree map, converting all markdown files in `src/` to html files in `build/`. Since pandoc embeds the assets into the built html, we can simply skip over all non markdown files. The full script can be found [here](https://github.com/Charl-AI/Charl-AI.github.io/blob/main/scripts/blg), but for brevity, I'll just show the important bit:
 
 ```bash
 pages=()
@@ -105,7 +119,7 @@ wait # wait for all pages to be built
 
 There's not much else to say about this script. It does one thing, and does it well. You could always add the ability to skip bulding unchanged pages, however, I would consider this a premature optimisation (at the time of writing, this site has <10 pages, and builds instantly).
 
-## HTML styling and metadata
+## HTML styling and metadata <a name="4"></a>
 
 `pandoc` allows us to inject metadata and html into our documents. The `metadata.yml` file specifies default values, which will be overridden by anything found in the header of your markdown files. In my blog, I chose to include the following metadata in each post:
 
@@ -168,14 +182,14 @@ Once we've got this metadata about the posts, we can now write our `default.html
 
 This is all we need for a working website! You can now run the `blg` script with this html template and you're done. It will look pretty spartan at this point, so be sure to add some CSS in the `<style>` section.
 
-## Bonus: auto-generate blog index with `lsblg`
+## Bonus: auto-generate blog index with `lsblg` <a name="5"></a>
 
 For me, the `src/blog/index.md` file is pretty simple (just a reverse-chronological list of my blog posts, with their metadata displayed in a pretty way), however, it's a hassle to keep this up to date when you are changing posts.
 
-I solved this with the `lsblg` script, which auto-generates the blog index from your posts and metadata. You can find the script here, and run it with `./lsblg > src/blog/index.md`. 
+I solved this with the `lsblg` script, which auto-generates the blog index from your posts and metadata. You can find the script [here](https://github.com/Charl-AI/Charl-AI.github.io/blob/main/scripts/lsblg), and run it with `./lsblg > src/blog/index.md`. 
 
 
-## Bonus: serving on localhost
+## Bonus: serving on localhost <a name="6"></a>
 
 Simple. Just run this, no installation required:
 
@@ -183,14 +197,18 @@ Simple. Just run this, no installation required:
 python3 -m http.server --directory build/
 ```
 
-## Bonus: deploying to GitHub pages
+## Bonus: deploying to GitHub pages <a name="7"></a>
 
 If you want to host your site on GitHub pages, like this one, you've basically got three options:
 
-1. Build site locally, commit the final html to the repo. Let GitHub pages publish the `build/` dir
+1. Build site locally, commit the final html to the repo. Let GitHub pages publish the `build/` dir.
 2. Use a GitHub action to build and publish the site remotely.
 3. Build locally, upload the zipped html site as a GitHub release, publish using GitHub action.
 
 I prefer option 3. It allows me to build the site locally without checking it into version control. I wrote [this](https://github.com/Charl-AI/Charl-AI.github.io/blob/main/.github/workflows/static.yml) GitHub action to publish the site each time I upload a new version of the site to GitHub releases.
 
-## Conclusions
+## Conclusions <a name="8"></a>
+
+Building a website from scratch is way easier than I thought. This may not be the most fully-featured site, but I like it more than anything I'd have gotten from a hugo template. It feels like, by making it myself, I imbued a little of my own personality into it. I am genuinely proud of it.
+
+The experience has also affirmed my faith in the Unix philosophy -- why buy into a complicated framework when you can achieve your goals with simple scripts?
