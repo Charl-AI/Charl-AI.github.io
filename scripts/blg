@@ -103,5 +103,15 @@ for page in "${pages[@]}"; do
   ) & # process all pages in parallel
 done
 wait # wait for all pages to be built
+
+# copy google site verification file into final build
+# Iterate over files matching the pattern "google*.html"
+for file in google*.html; do
+  if [[ -f "$file" ]]; then
+    echo "Found google site verification file, copying $file into $BUILD_DIR"
+    cp "$file" "$BUILD_DIR"
+  fi
+done
+
 exit 0
 
