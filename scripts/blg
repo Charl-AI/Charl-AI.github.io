@@ -71,38 +71,47 @@ if [[ "$1" == "-c" || "$1" == "--clean" ]]; then
   exit 0
 fi
 
-# BUILD THE BLOG
-pages=()
-
-# simply find all markdown files in src
-readarray -d '' pages_found < <(find "src" -maxdepth 3 -type f -name "*.md" -print0;)
+# Find all markdown and HTML files in src
+readarray -d '' pages_found < <(find "src" -maxdepth 3 -type f \( -name "*.md" -o -name "*.html" \) -print0;)
 pages+=("${pages_found[@]}")
 
 num_entries=${#pages_found[@]}
 echo "Found $num_entries pages in src/"
-echo "${pages[@]}"
 
 for page in "${pages[@]}"; do
   ( 
-  # output file has html extension and no src/ prefix
-  new_page="${page%.md}.html"
-  new_page="${new_page#src/}"
+  # Determine the file extension
+  extension="${page##*.}"
 
-  directory=$(dirname -- "$new_page")
-  mkdir -p "$BUILD_DIR/$directory"
-
-  # build the page 
-  # --katex looks nicest, but you can use --mathjax for a faster build
-  pandoc "$page" -o "$BUILD_DIR/$new_page" \
-    --katex \
-    --template=default.html \
-    --metadata-file metadata.yaml \
-    --embed-resources
-
-  echo "Built $page"
-  ) & # process all pages in parallel
+  # If it's a markdown file, convert to HTML
+  if [ "$extension" = "md" ]; then
+    # Output file has an HTML extension and no src/ prefix
+    new_page="${page%.md}.html"
+    new_page="${new_page#src/}"
+  
+    directory=$(dirname -- "$new_page")
+    mkdir -p "$BUILD_DIR/$directory"
+  
+    # Build the page 
+    # --katex looks nicest, but you can use --mathjax for a faster build
+    pandoc "$page" -o "$BUILD_DIR/$new_page" \
+      --katex \
+      --template=default.html \
+      --metadata-file metadata.yaml \
+      --embed-resources
+  
+    echo "Built $page"
+  else
+    # If it's an HTML file, simply copy it to the destination
+    new_page="${page#src/}"
+    directory=$(dirname -- "$new_page")
+    mkdir -p "$BUILD_DIR/$directory"
+    cp "$page" "$BUILD_DIR/$new_page"
+    echo "Copied $page"
+  fi
+  ) & # Process all pages in parallel
 done
-wait # wait for all pages to be built
+wait # Wait for all pages to be processed
 
 # copy google site verification file into final build
 # Iterate over files matching the pattern "google*.html"
