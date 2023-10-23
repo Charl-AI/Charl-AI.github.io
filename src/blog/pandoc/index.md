@@ -3,29 +3,16 @@ title: A Tiny Static Site Generator with Pandoc and Bash
 subtitle: For people who are allergic to frameworks.
 date: 2023-07-29
 word_count: 1462 words ~5 minute read
+generate_toc: true
 ---
 
 I recently decided to overhaul this website. The inciting incident came when, after over a year of not touching it, I tried to write a new post. The blog was being built with Jekyll and a template that I found online. When coming back to the repo, I realised that I had no idea how anything worked.
 
 In recent months, I have become more and more convinced by the Unix philosophy and have enjoyed solving problems with small and modular shell scripts. When looking at alternatives to Jekyll, such as Hugo and Gatsby, I despaired at the thought of having to learn these massive frameworks without fundamentally understanding what's they're doing.
 
-Inspired by [ekiim's blog](https://ekiim.xyz/blog/entries/blog-with-pandoc-and-git/), I developed a custom static site generator which builds this website. After reading this post, you will be able to too! 
+Inspired by [ekiim's blog](https://ekiim.xyz/blog/entries/blog-with-pandoc-and-git/), I developed a custom static site generator which builds this website. After reading this post, you will be able to too!
 
 _Note: web development is well outside my area of expertise, so this post is admittedly pretty basic. It's the guide I wish I had before I started this project. The target audience is people like me who want to build simple, brutalist websites from scratch._
-
----
-
-## Table of contents
-[What is a static site generator, actually](#1)\
-[How to structure your blog](#2)\
-[`blg`: the beating heart of this project](#3)\
-[HTML styling and metadata](#4)\
-[Bonus: auto generate blog index with `lsblg`](#5)\
-[Bonus: serving on localhost](#6)\
-[Bonus: deploying to GitHub pages](#7)\
-[Conclusions](#8)
-
----
 
 ## What is a static site generator, actually? <a name="1"></a>
 
@@ -62,7 +49,7 @@ We're going to make a script which maps all markdown files in your `src/` direct
 └── default.html
 ```
 
-We name each page of the website `index.md` -- when the site is built, they will be converted to `index.html`, which browsers will display by default when navigating to their parent directory. For example, the top level `index.md` file is your homepage and lives at the absolute root of the site once it's built. Inside your markdown files, you can link to pages like so: 
+We name each page of the website `index.md` -- when the site is built, they will be converted to `index.html`, which browsers will display by default when navigating to their parent directory. For example, the top level `index.md` file is your homepage and lives at the absolute root of the site once it's built. Inside your markdown files, you can link to pages like so:
 
 ```
 [This is a link to the homepage](/)
@@ -94,7 +81,7 @@ echo "Found $num_entries pages in src/"
 echo "${pages[@]}"
 
 for page in "${pages[@]}"; do
-  ( 
+  (
   # output file has html extension and no src/ prefix
   new_page="${page%.md}.html"
   new_page="${new_page#src/}"
@@ -103,7 +90,7 @@ for page in "${pages[@]}"; do
   directory=$(dirname -- "$new_page")
   mkdir -p "./build/$directory"
 
-  # build the page 
+  # build the page
   # --katex makes math look best, but you can use --mathjax for a faster build
   pandoc "$page" -o "./build/$new_page" \
     --katex \
@@ -130,6 +117,7 @@ subtitle: this is a subtitle
 date: YYYY/MM/DD
 word_count: X words ~Y minute read
 ---
+
 This is the content of the markdown post,
 the bit above is the metadata header.
 ```
@@ -186,8 +174,7 @@ This is all we need for a working website! You can now run the `blg` script with
 
 For me, the `src/blog/index.md` file is pretty simple (just a reverse-chronological list of my blog posts, with their metadata displayed in a pretty way), however, it's a hassle to keep this up to date when you are changing posts.
 
-I solved this with the `lsblg` script, which auto-generates the blog index from your posts and metadata. You can find the script [here](https://github.com/Charl-AI/Charl-AI.github.io/blob/main/scripts/lsblg), and run it with `./lsblg > src/blog/index.md`. 
-
+I solved this with the `lsblg` script, which auto-generates the blog index from your posts and metadata. You can find the script [here](https://github.com/Charl-AI/Charl-AI.github.io/blob/main/scripts/lsblg), and run it with `./lsblg > src/blog/index.md`.
 
 ## Bonus: serving on localhost <a name="6"></a>
 

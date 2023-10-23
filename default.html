@@ -45,6 +45,23 @@
       color: white;
     }
     .footer a {color: white;}
+    nav{
+      font-family: "Roboto Mono", monospace; 
+      font-size: 0.8em;
+      position: fixed;
+      right: 5em;
+      width: 20em;
+      border: 1px solid #36454F;
+      border-radius: 5px;
+      padding: 1em;
+      line-height: 2;
+      text-align: left;
+    }
+    @media (max-width: 1300px) {
+    nav {
+      display: none;
+    }
+}
   </style>
   $if(math)$
     $math$
@@ -65,6 +82,14 @@
     $endif$
   </header>
   $endif$
+$if(generate_toc)$
+$if(toc)$
+<nav id="$idprefix$TOC" role="doc-toc">
+  <strong>Contents</strong>
+  $table-of-contents$
+</nav>
+$endif$
+$endif$
   <main>
     $if(date)$
     <p class="date"><i>$date$</i></p>

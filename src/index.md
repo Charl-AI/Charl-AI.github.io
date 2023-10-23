@@ -1,7 +1,7 @@
 Hi!
 
 <img align="right" width="40%" style="padding: 15px;" src="src/assets/CJ-photo.jpg">
-I am a Computer Science (machine learning) PhD student, advised by [Ben Glocker](http://wp.doc.ic.ac.uk/bglocker/) at Imperial College London. I am currently part-time at the Alan Turing Institute, where I am a [member](https://www.turing.ac.uk/people/enrichment-students/charles-jones) of the 2023 enrichment scheme cohort.
+I am a Computer Science (machine learning) PhD student, advised by [Ben Glocker](http://wp.doc.ic.ac.uk/bglocker/) at Imperial College London. I am currently part-time at The Alan Turing Institute, where I am a [member](https://www.turing.ac.uk/people/enrichment-students/charles-jones) of the 2023 enrichment scheme cohort.
 
 My research focuses on **Causal Deep Learning for Fair and Robust Medical AI**. I am interested in all things involving deep learning, causal inference/discovery, and how we can combine these fields to solve problems in medical imaging and the wider AI community.
 

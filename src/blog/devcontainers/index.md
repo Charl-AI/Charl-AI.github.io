@@ -3,18 +3,12 @@ title: Devcontainers Diminish Dependency Difficulties in Deep Learning
 date: 2022-01-20
 subtitle: Friends don't let friends develop in unreproducible environments.
 word_count: 3762 words ~15 minute read
+generate_toc: true
 ---
 
 This post walks you through the basics of using Docker (optionally with VScode Devcontainers) to create reproducible Deep Learning project environments. I first provide some motivation as to why this is a good idea, then explain the design principles that I believe projects should follow in order to improve environment reproducibility. I then give a brief description of relevant docker concepts for deep learning, explain how dockerfiles work, and introduce VScode devcontainers which include some useful features. The post finishes by listing some miscellaneous gotchas, limitations, and tips.
 
 This post is accompanied by a [repo with the examples shown in this post](https://github.com/Charl-AI/Deep-Learning-Devcontainers).
-
-## Table of contents
-[Why Containerise Your Development Environment?](#intro)\
-[Devcontainers Suggested Structure](#manifesto)\
-[Anatomy of Docker and Dockerfiles](#dockerfile)\
-[VScode Devcontainers](#devcontainers)\
-[Miscellaneous: Tips & Tricks, Gotchas, Limitations, and Workarounds](#gotcha)
 
 ## Why Containerise Development Environments? <a name="intro"></a>
 
@@ -55,11 +49,11 @@ The key principle behind this file structure is incremental buy-in. For example,
 >
 > If you have Docker and VScode (with the remote development extension pack) installed, you can reproduce the entire development environment including OS, Python version, CUDA version, and dependencies by simply running `Remote containers: Clone Repository in Container Volume` from the command palette (alternatively, you could clone the repository normally and run `Remote Containers: Open folder in Container`). This is the easiest way to install the project. If you use Docker but don't like VScode, feel free to try building from the Dockerfile, although some minor tweaks may be necessary.
 >
-> *This method requires GPU drivers capable of CUDA 11.3 - you can check this by running `nvidia-smi` and ensuring CUDA Version = 11.3 or greater*
+> _This method requires GPU drivers capable of CUDA 11.3 - you can check this by running `nvidia-smi` and ensuring CUDA Version = 11.3 or greater_
 >
 > ### Method 2: python virtual environments (recommended if you do not have a CUDA 11.3 capable GPU or if you do not use Docker)
 >
-> Clone the repository, then create, activate, and install dependencies in a [Python virtual environment](https://docs.python.org/3/tutorial/venv.html) in the usual way. *Ensure you are using Python 3.8 - this is what the project is built on*.
+> Clone the repository, then create, activate, and install dependencies in a [Python virtual environment](https://docs.python.org/3/tutorial/venv.html) in the usual way. _Ensure you are using Python 3.8 - this is what the project is built on_.
 >
 > Depending on your CUDA driver capabilities / CUDA toolkit version, you may have to reinstall the deep learning libraries with versions suited to your setup. Instructions can be found here for [PyTorch](https://pytorch.org/get-started/locally/), [JAX](https://github.com/google/jax#installation), and [TensorFlow](https://www.tensorflow.org/install/gpu).
 
@@ -123,50 +117,47 @@ RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requ
 
 **5.** Install requirements from `requirements.txt`.
 
-*Note, most dockerfiles end with a `CMD` line which specifies what command to run when the container starts, this could be running the application or simply running bash. This is not included in this example because you do not need that line when using VScode devcontainers. If you want to use the Dockerfile without VScode devcontainers, you will need to add this line.*
+_Note, most dockerfiles end with a `CMD` line which specifies what command to run when the container starts, this could be running the application or simply running bash. This is not included in this example because you do not need that line when using VScode devcontainers. If you want to use the Dockerfile without VScode devcontainers, you will need to add this line._
 
 ## VScode Devcontainers <a name="devcontainers"></a>
 
-Docker containers are great for ensuring a consistent environment but there's an issue with using them on their own - Docker is mostly designed for deployment, not development. You *could* spin up a container, SSH into it, mount your data and source code, forward any necessary ports, and do your development through the terminal but that would not be fun. Fortunately, VScode has a brilliant feature called Devcontainers which does those steps for you and also attaches a VScode window to the container. This allows you to develop seamlessly using the remote development features of VScode and gives you the same experience as any local project. To use this, simply ensure you have the [Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) installed. The [VScode docs](https://code.visualstudio.com/docs/remote/create-dev-container) are very good and are worth reading but the main thing to understand is that you can use a `devcontainer.json` file to tell VScode how to build the container - an annotated example file is shown below, and the reference docs can be found [here](https://code.visualstudio.com/docs/remote/devcontainerjson-reference):
+Docker containers are great for ensuring a consistent environment but there's an issue with using them on their own - Docker is mostly designed for deployment, not development. You _could_ spin up a container, SSH into it, mount your data and source code, forward any necessary ports, and do your development through the terminal but that would not be fun. Fortunately, VScode has a brilliant feature called Devcontainers which does those steps for you and also attaches a VScode window to the container. This allows you to develop seamlessly using the remote development features of VScode and gives you the same experience as any local project. To use this, simply ensure you have the [Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) installed. The [VScode docs](https://code.visualstudio.com/docs/remote/create-dev-container) are very good and are worth reading but the main thing to understand is that you can use a `devcontainer.json` file to tell VScode how to build the container - an annotated example file is shown below, and the reference docs can be found [here](https://code.visualstudio.com/docs/remote/devcontainerjson-reference):
 
 ```json
 {
-	"name": "Deep Learning GPU: CUDA 11.3",
-	// Build args (1)
-	"build": {
-		"dockerfile": "Dockerfile",
-		"context": "..",
-		"args": {
-			"PYTHON_VERSION": "3.8",
-		}
-	},
-	// Run args (2)
-	"runArgs": [
-		"--gpus=all",
-		"--privileged",
-	],
-	// Mounts (3)
-	"mounts": [
-		"source=/vol/biodata/data,target=${containerWorkspaceFolder}/mounted-data,type=bind"
-	],
-	// settings for the vscode workspace (can also be set when it's running)
-	"settings": {
-		// This is the venv path set in the Dockerfile
-		"python.defaultInterpreterPath": "/opt/venv/bin/python",
-	},
-    // Extensions to preinstall in the container (you can install more when it's running)
-	"extensions": [
-		"ms-python.python",
-		"ms-python.vscode-pylance",
-		"github.copilot",
-		"github.vscode-pull-request-github",
-		"njpwerner.autodocstring"
-	],
-	"features": {
-		"github-cli": "latest",
-	},
-	"containerUser": "vscode", // we created this user in the Dockerfile
-	"shutdownAction": "none", // don't stop container on exit
+  "name": "Deep Learning GPU: CUDA 11.3",
+  // Build args (1)
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "args": {
+      "PYTHON_VERSION": "3.8"
+    }
+  },
+  // Run args (2)
+  "runArgs": ["--gpus=all", "--privileged"],
+  // Mounts (3)
+  "mounts": [
+    "source=/vol/biodata/data,target=${containerWorkspaceFolder}/mounted-data,type=bind"
+  ],
+  // settings for the vscode workspace (can also be set when it's running)
+  "settings": {
+    // This is the venv path set in the Dockerfile
+    "python.defaultInterpreterPath": "/opt/venv/bin/python"
+  },
+  // Extensions to preinstall in the container (you can install more when it's running)
+  "extensions": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "github.copilot",
+    "github.vscode-pull-request-github",
+    "njpwerner.autodocstring"
+  ],
+  "features": {
+    "github-cli": "latest"
+  },
+  "containerUser": "vscode", // we created this user in the Dockerfile
+  "shutdownAction": "none" // don't stop container on exit
 }
 ```
 
@@ -179,7 +170,6 @@ Docker containers are great for ensuring a consistent environment but there's an
 Notice also that you can specify any settings and extensions you want to set up for the workspace in the container. These are not strictly necessary because you can always change extensions/settings while the container is running (i.e. in the normal way through the VScode UI). The nice thing about this is that someone can easily reproduce all your tooling to get a setup that suits the project needs. It appears that companies are starting to see the benefits of this and have started using devcontainers to [help speed up onboarding](https://dev.to/b3ncr/make-onboarding-simple-using-vs-code-remote-containers-2emg).
 
 A nice feature of VScode devcontainers is one-click installation of projects, simply run `Remote containers: Clone Repository in Container Volume` from the command palette (alternatively, clone the repository normally and run `Remote Containers: Open folder in Container`) and you're done! There is a minor difference between these two methods - the first stores your source code in a volume (essentially a filesystem that only Docker can access), whereas the second method involves storing the code in your local filesystem and mounting it to the container. On Linux, there is generally not much difference between these options, but on Windows/MacOS, volumes are generally a bit more performant.
-
 
 ## Miscellaneous: Tips & Tricks, Gotchas, Limitations, and Workarounds <a name="gotcha"></a>
 
@@ -195,9 +185,9 @@ A nice feature of VScode devcontainers is one-click installation of projects, si
 
 - **Which Nvidia base image should I use?** First, decide what CUDA version and OS you want to support, then pick the image that supports that. Nvidia provides three types of images 'base', 'runtime', and 'devel'. I would generally recommend using the devel image if you are using JAX and using the base image if you are only using PyTorch. This is because PyTorch comes bundled with its own version of CUDA, so you will not need all of the features of the devel image.
 
-- **What do the Nvidia base images *actually* do?** Not that much, really. They just give you an OS with CUDA (and sometimes CuDNN) preinstalled and also set a bunch of useful environment variables such as `NVIDIA_DRIVER_CAPABILITIES` and `NVIDIA_REQUIRE_CUDA` (this is the one that ensures you have a GPU capable of running the CUDA toolkit requested). You can actually try using a different base image and you may find that you can still use the GPU (especially if you use PyTorch which comes bundled with its own CUDA toolkit).
+- **What do the Nvidia base images _actually_ do?** Not that much, really. They just give you an OS with CUDA (and sometimes CuDNN) preinstalled and also set a bunch of useful environment variables such as `NVIDIA_DRIVER_CAPABILITIES` and `NVIDIA_REQUIRE_CUDA` (this is the one that ensures you have a GPU capable of running the CUDA toolkit requested). You can actually try using a different base image and you may find that you can still use the GPU (especially if you use PyTorch which comes bundled with its own CUDA toolkit).
 
-- **Then why do your examples use the Nvidia base images and not X/Y/Z other image?** Even though you *could* use a different base image for your projects, doesn't mean you *should*. Yes, it is possible to take a plain python image and install CUDA + set all the relevant environment variables, but you'd just be doing the same thing as the Nvidia images (probably in a less efficient way, too). You might also be tempted to use the images provided by PyTorch/TensorFlow etc... but that is also not a great idea because you will probably have to install your own requirements on top of it anyway so you're back to the same place we were but now you also have to decide whether to include TF/PyTorch in your requirements file - if you do, then using the PyTorch/TF image was pointless - if you don't then your requirements file is incomplete and someone who does not use Docker will not be able to create a correct virtualenv from the file.
+- **Then why do your examples use the Nvidia base images and not X/Y/Z other image?** Even though you _could_ use a different base image for your projects, doesn't mean you _should_. Yes, it is possible to take a plain python image and install CUDA + set all the relevant environment variables, but you'd just be doing the same thing as the Nvidia images (probably in a less efficient way, too). You might also be tempted to use the images provided by PyTorch/TensorFlow etc... but that is also not a great idea because you will probably have to install your own requirements on top of it anyway so you're back to the same place we were but now you also have to decide whether to include TF/PyTorch in your requirements file - if you do, then using the PyTorch/TF image was pointless - if you don't then your requirements file is incomplete and someone who does not use Docker will not be able to create a correct virtualenv from the file.
 
 - **Can I use devcontainers over SSH?** Yes. You can connect using VScode remote-SSH to connect to the machine you want to run the container on, then [run the container as if you were running it locally](https://code.visualstudio.com/remote/advancedcontainers/develop-remote-host). If this doesn't work, it may be because you need to update VScode, it hasn't always had this feature. One quirk I have found is that the 'clone repository in container volume' option sometimes fails over SSH. I think this is because it is trying to clone it into your local filesystem, not the remote one. I suspect this will be fixed soon, but it's probably best to use the alternate method of cloning the repo into the remote filesystem normally and running 'open folder in container' for now.
 
@@ -206,6 +196,7 @@ A nice feature of VScode devcontainers is one-click installation of projects, si
 - **I am using an institutional account with UID and GID != 1000, do I need to change those values in the Dockerfile?** Surprisingly, no! It turns out that VScode devcontainers are clever enough to update the UID and GID of the container user to match the account you used to create the container. This means the container user has the same permissions as your usual user so you shouldn't have to worry about permissions issues with mounted filesystems.
 
 - **Do I need to make any changes to my requirements.txt file when I use devcontainers?** Not usually, but there are a few situations where you should. For example, if you want to install PyTorch for CUDA 11.3, you will need to run a command like this one `pip3 install torch==1.10.1+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html` (from the [PyTorch get started page](https://pytorch.org/get-started/locally/)), however, if you add this to your requirements file in the usual way with `pip freeze`, you will get something like this `torch==1.10.1+cu113`. Now, if you install from the requirements file, you will get an error because pip tried to find torch 1.10.1+cu113 in pypi, when it actually needed to look in the PyTorch website. To solve this, you may need to manually add the find-links to your requirements file - here is an example for installing the CUDA 11.3 versions of PyTorch and JAX:
+
 ```
 -f https://storage.googleapis.com/jax-releases/jax_releases.html
 -f https://download.pytorch.org/whl/cu113/torch_stable.html
@@ -213,5 +204,5 @@ jax==0.2.26
 jaxlib==0.1.75+cuda11.cudnn82
 torch==1.10.0+cu113
 ```
-Note: this is not a container-specific problem and is something you should do in all your projects.
 
+Note: this is not a container-specific problem and is something you should do in all your projects.
