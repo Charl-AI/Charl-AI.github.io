@@ -195,24 +195,13 @@ def get_train_augmentations() -> Callable[[Tensor], Tensor]:
   return v2.Compose(aug_list)
 
 
-def get_eval_augmentations() -> Callable[[Tensor], Tensor]:
-  aug_list = [
-    v2.CenterCrop(224),
-    v2.ToDtype(torch.float32),
-    v2.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
-  ]
-  return v2.Compose(aug_list)
-
-
 class StochasticCacheDataset(Dataset):
   def __init__(self) -> None:
     super().__init__()
 
     ... # other dataset logic
     self.transforms = get_transforms()
-
     self.augmentations = get_train_augmentations()
-    # or get_eval_augmentations()
 
     img_shape = ... # (C, H, W)
     num_samples = ... # length of dataset
@@ -249,9 +238,6 @@ class StochasticCacheDataset(Dataset):
     # if anything has been cached in each slot)
     self.shared_array *= 0
 
-  def set_use_cache(self, use_cache: bool):
-      self.use_cache = use_cache
-
   def __getitem__(self, idx: int) -> tuple[Tensor, Tensor]:
     # never cache images out of bounds of the cache array
     if idx >= len(self.shared_array):
@@ -273,7 +259,7 @@ class StochasticCacheDataset(Dataset):
     return img, label
 ```
 
-Okay, now we have something that works quite nicely in the real-world! The only problem is that the code is quite long and fiddly. It would be nice if we could refactor this into some usable components...
+Okay, now we have something that works quite nicely in the real-world! The only problem is that the code is quite long and fiddly. It would be nice if we could refactor this into some reusable components...
 
 ## The `stochaching` library
 
