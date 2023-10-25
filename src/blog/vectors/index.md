@@ -10,7 +10,7 @@ I've been exposed to linear algebra many times. First in school, then as a Mecha
 
 This series contains first-principles introductions to the _concepts_ behind mathematical topics that I've been self-studying. It will be best enjoyed by readers like me, who have already been exposed to these topics informally in science or engineering or computing. I'll focus on intuitively explaining the ideas behind the topics, which will hopefully help you to get over the conceptual hurdles that I struggled with during my own learning. It is not a substitute for textbook study and is best read as an accompaniment to more rigorous resources.
 
-This post is about understanding vector spaces. I'll try to clear up some points that I got stuck on when learning linear algebra more formally. For example: what exactly _is_ a vector? What about matrices? Tensors? Are all tensors vectors? Are all vectors tensors? What exactly is going on here?
+This post is about understanding vector spaces. I'll try to clear up some points that I got stuck on when learning linear algebra more formally. For example: what exactly _is_ a vector? What about fields? algebras? Why do we need abstract algebraic structures anyway?
 
 ## So what is a vector, actually?
 
@@ -44,17 +44,28 @@ $$ P_n[x] = \{\sum_{i=0}^n c_ix^i : c_i \in \mathbb{R} \}, \quad \mathrm{conside
 
 $$ \mathbf{u}(x) = u_0 + u_1x + ... + u_nx^n , \quad \mathbf{v}(x) = v_0 + v_1x + ... + v_nx^n, $$
 
-$$ (\mathbf{u} + \mathbf{v})(x) = \sum_{i=0}^n (u_i + v_i)x, \quad a \cdot \mathbf{u}(x) = \sum_{i=0}^n au_ix^i, \quad a \in \mathbb{R} .$$
+$$ (\mathbf{u} + \mathbf{v})(x) = \sum_{i=0}^n (u_i + v_i)x^i, \quad a \cdot \mathbf{u}(x) = \sum_{i=0}^n au_ix^i, \quad a \in \mathbb{R} .$$
 
 We're not used to thinking of polynomials as vectors, but they are indeed elements of a vector space. Polynomials aren't even a particularly wild example. I'll leave it up to you to try your hand at creating more interesting vector spaces.
 
-One thing you might have noticed by now is that I keep saying that things form vector spaces _over_ $\mathbb{R}$. This is related to how the scalar multiplication operation is defined. To explain why this is, we'll have to talk briefly about fields.
+One thing you might have noticed by now is that I keep saying that things form vector spaces _over_ $\mathbb{R}$. This is related to how the scalar multiplication operation is defined. The easiest way to understand this is to contrast it to the addition operation.
 
-## A brief digression on fields
-
-Just like vector spaces, groups, fields, and rings are painfully abstract definitions for things that seem intuitively obvious. But just like vector spaces, their real power becomes apparent once you understand their generality.
+With addition, we take two vectors and map them onto another element in the same vector space ($+: V \times V \rightarrow V$). In contrast, scalar multiplication is slightly different. Scalar multiplication maps a vector and a 'scalar' onto an element of the vector space ($\cdot: F \times V \rightarrow V$, where $F$ is a _field_). Once we have defined the scalar multiplication operation with $F$, we may say that the vector space is _over_ $F$.
 
 
+## Fields and algebras
+
+Just like vector spaces, fields are painfully abstract definitions for things that seem intuitively obvious. But just like vector spaces, their real power becomes apparent once you understand their generality.
+
+A field is a 3-tuple $(F, +, *)$, consisting of a set $F$, with well-defined addition ($+: F \times F \rightarrow F$) and multiplication ($*: F \times F \rightarrow F$) operations. Again, there are some properties that the operations must satisfy that we will not list out here. Like vector spaces, fields are closely related to Abelian groups. If $(F, +, *)$ is a field, $(F, +)$ is an Abelian group.
+
+You'd be forgiven at this point for not spotting how fields differ from vector spaces. One difference is that fields get a multiplicative inverse operation (i.e. division), whereas vector spaces do not. The other major difference is in the function 'signature' of the multiplication operations. In fields, $*$ takes two elements of a field and maps onto another element of the same field. Contrast this to the 'signature' of the $\cdot$ operation for vector spaces in the section above.
+
+In practice, this distinction means that $F$ tends to be a set of _numbers_, whereas $V$ is more often a set of _collections of numbers_. In the case where $V = F$, $*$ and $\cdot$ coincide, and we may say that the field is a vector space over itself. Every field forms a vector space over itself.
+
+Some quickfire examples of sets that form fields are $\mathbb{C}$, $\mathbb{R}$, and $\mathbb{Q}$. Note that the integers $\mathbb{Z}$ do not form a field because they are not closed under division (e.g. $2^{-1} \not \in \mathbb{Z}$).
+
+## Complex vector spaces
 
 Note on complex numbers and fields
 
@@ -62,6 +73,3 @@ Note on how complex numbers are already sort of vectors
 
 At this point, the water we're treading in goes very deep. When you start asking these kinds of questions, you very quickly end up talking about quaternions. While writing this post, I ended up in a rabbit hole on the [Frobenius theorem](<https://en.wikipedia.org/wiki/Frobenius_theorem_(real_division_algebras)>), which explains why associative division algebras can only have dimension one ($\mathbb{R}$), two ($\mathbb{C}$), or four ($\mathbb{H}$). Let's wade back to the shallows before we get lost at sea.
 
-## What about matrices?
-
-## Tensors??
