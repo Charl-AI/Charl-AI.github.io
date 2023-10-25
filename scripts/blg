@@ -94,7 +94,7 @@ for page in "${pages[@]}"; do
   
     # Build the page 
     # --katex looks nicest, but you can use --mathjax for a faster build
-    pandoc "$page" -o "$BUILD_DIR/$new_page" \
+    pandoc --toc "$page" -o "$BUILD_DIR/$new_page" \
       --katex \
       --template=default.html \
       --metadata-file metadata.yaml \
