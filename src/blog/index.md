@@ -2,6 +2,16 @@
 
 ---
 
+## [Eliminating Dataloading Bottlenecks in PyTorch with Stochastic Caching](dataloaders)
+
+A zero-effort speedup for dataloading-bottlenecked applications
+
+*2023-10-23*
+
+*1872 words ~7 minute read*
+
+---
+
 ## [Lazy-Loading Conda for Faster Shell Startup](conda)
 
 Plus a bonus trick for switching envs.
