@@ -2,7 +2,7 @@
 title: Eliminating Dataloading Bottlenecks in PyTorch with Stochastic Caching
 subtitle: A zero-effort speedup for dataloading-bottlenecked applications
 date: 2023-10-23
-word_count: X words ~Y minute read
+word_count: 1872 words ~7 minute read
 generate_toc: true
 ---
 
