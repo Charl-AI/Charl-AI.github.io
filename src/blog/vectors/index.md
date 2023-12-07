@@ -57,7 +57,7 @@ With addition, we take two vectors and map them onto another element in the same
 
 Just like vector spaces, fields are painfully abstract definitions for things that seem intuitively obvious. But just like vector spaces, their real power becomes apparent once you understand their generality.
 
-A field is a 3-tuple $(F, +, *)$, consisting of a set $F$, with well-defined addition ($+: F \times F \rightarrow F$) and multiplication ($*: F \times F \rightarrow F$) operations. Again, there are some properties that the operations must satisfy that we will not list out here. Like vector spaces, fields are closely related to Abelian groups. If $(F, +, *)$ is a field, $(F, +)$ is an Abelian group.
+A field is a 3-tuple $(F, +, * )$, consisting of a set $F$, with well-defined addition ($+: F \times F \rightarrow F$) and multiplication ($*: F \times F \rightarrow F$) operations. Again, there are some properties that the operations must satisfy that we will not list out here. Like vector spaces, fields are closely related to Abelian groups. If $(F, +, *)$ is a field, $(F, +)$ is an Abelian group.
 
 You'd be forgiven at this point for not spotting how fields differ from vector spaces. One difference is that fields get a multiplicative inverse operation (i.e. division), whereas vector spaces do not. The other major difference is in the function 'signature' of the multiplication operations. In fields, $*$ takes two elements of a field and maps onto another element of the same field. Contrast this to the 'signature' of the $\cdot$ operation for vector spaces in the section above.
 
