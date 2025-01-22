@@ -97,7 +97,6 @@ for page in "${pages[@]}"; do
     pandoc --toc "$page" -o "$BUILD_DIR/$new_page" \
       --katex \
       --template=default.html \
-      --metadata-file metadata.yaml \
       --embed-resources
   
     echo "Built $page"

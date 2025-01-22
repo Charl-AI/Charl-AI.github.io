@@ -79,7 +79,7 @@ process_blog_posts() {
 
           echo "---"
           echo ""
-          echo "## [${title}](${page})"
+          echo "### [${title}](${page})"
           echo ""
           echo "$subtitle"
           echo ""
