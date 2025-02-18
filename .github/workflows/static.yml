@@ -1,4 +1,4 @@
-# NB we expect the static html files to be zipped and 
+# NB we expect the static html files to be zipped and
 # uploaded to the latest github release
 name: Deploy GitHub Release content to Pages
 
@@ -34,16 +34,16 @@ jobs:
           latest: true
           fileName: "build.zip"
       - name: Unzip Release
-        run: | 
+        run: |
           unzip ./build.zip
           echo "Success!"
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v4
         with:
-          path: './build'
+          path: "./build"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
