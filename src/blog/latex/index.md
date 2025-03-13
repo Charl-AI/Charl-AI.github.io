@@ -18,7 +18,7 @@ This post will contain miscellaneous tips to help make your papers more beautifu
 
 The promise of formats such as LaTeX and HTML is that you can write your content first and then transplant it into whatever template you like for publication. The premise of this post is that this is false.
 
-I say this to emphasise that it's not enough to just apply the template for whatever conference or journal you are submitting to. If you want to write beautiful papers, you will have to write them specifically for their eventual home. If you are resubmitting a paper and need to change the template, you will likely have to apply all these tricks again to make it look right. There are no shortcuts.
+I say this to emphasise that it's not enough to just apply the template for whatever conference or journal you are submitting to. If you want to write beautiful papers, you will have to write them specifically for their eventual home. Crucially, you will have to tweak your content too. If you are resubmitting a paper and need to change the template, you will likely have to apply all these tricks again to make it look right. There are no shortcuts.
 
 ## Write 'blocky' paragraphs
 
