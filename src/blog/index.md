@@ -2,61 +2,80 @@
 
 ---
 
-## [Eliminating Dataloading Bottlenecks in PyTorch with Stochastic Caching](dataloaders)
+### [Configuring Hyperparameters with Decorators](args)
+
+A new pattern for hackable research code in Python.
+
+_2025-06-29_
+
+_1749 words ~6 minute read_
+
+---
+
+### [On Writing Beautiful Papers](latex)
+
+LaTeX tips for paper gestalt.
+
+_2025-02-16_
+
+_2256 words ~9 minute read_
+
+---
+
+### [Eliminating Dataloading Bottlenecks in PyTorch with Stochastic Caching](dataloaders)
 
 A zero-effort speedup for dataloading-bottlenecked applications
 
-*2023-10-23*
+_2023-10-23_
 
-*1872 words ~7 minute read*
+_1872 words ~7 minute read_
 
 ---
 
-## [Lazy-Loading Conda for Faster Shell Startup](conda)
+### [Lazy-Loading Conda for Faster Shell Startup](conda)
 
 Plus a bonus trick for switching envs.
 
-*2023-07-30*
+_2023-07-30_
 
-*421 words ~1 minute read*
+_421 words ~1 minute read_
 
 ---
 
-## [A Tiny Static Site Generator with Pandoc and Bash](pandoc)
+### [A Tiny Static Site Generator with Pandoc and Bash](pandoc)
 
 For people who are allergic to frameworks.
 
-*2023-07-29*
+_2023-07-29_
 
-*1462 words ~5 minute read*
+_1462 words ~5 minute read_
 
 ---
 
-## [Devcontainers Diminish Dependency Difficulties in Deep Learning](devcontainers)
+### [Devcontainers Diminish Dependency Difficulties in Deep Learning](devcontainers)
 
 Friends don't let friends develop in unreproducible environments.
 
-*2022-01-20*
+_2022-01-20_
 
-*3762 words ~15 minute read*
+_3762 words ~15 minute read_
 
 ---
 
-## [An Exponential Moving Average Filter Using Only Addition and Bit Shift](filters)
+### [An Exponential Moving Average Filter Using Only Addition and Bit Shift](filters)
 
 Or how I learned to stop worrying and love the bomb disposal robot.
 
-*2021-11-14*
+_2021-11-14_
 
-*892 words ~3 minute read*
+_892 words ~3 minute read_
 
 ---
 
-## [Automating my Coursework with a Genetic Algorithm](genetic-algo)
+### [Automating my Coursework with a Genetic Algorithm](genetic-algo)
 
-AI does my machine learning coursework for me! Achieve the singularity with this one weird trick! 
+AI does my machine learning coursework for me! Achieve the singularity with this one weird trick!
 
-*2021-08-28*
+_2021-08-28_
 
-*1000 words ~4 minute read*
-
+_1000 words ~4 minute read_
