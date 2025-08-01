@@ -14,7 +14,7 @@ def guided_prediction(model, t, x, y, omega):
     """Predict with classifier-free guidance."""
     cond = model(t,x,y)
     uncond = model(t,x,None)
-    return cond + omega * (cond - uncond)
+    return uncond + omega * (cond - uncond)
 
 def generate_image(model, x0, y1, n_steps, omega):
     """Generate using the Euler probability flow ODE solver."""
@@ -22,8 +22,8 @@ def generate_image(model, x0, y1, n_steps, omega):
     dt = 1 / n_steps
     t = 0
     for _ in range(n_steps):
+        x1 += guided_prediction(model,t,x1,y1,omega) * dt
         t += dt
-        x1 += guided_prediction(model,t,x1,y1,omega)
     return x1
 
 def compute_loss(model, x0, x1, y1, sigma):
@@ -69,7 +69,7 @@ def guided_prediction(model, t, x, y, alpha, omega):
     uncond = model(t,x,None)
     diff = cond - uncond
     scale = omega * l2_norm(diff) ** alpha
-    return cond + scale * diff
+    return uncond + scale * diff
 
 ```
 
@@ -86,7 +86,7 @@ def guided_prediction(model, t, x, y, config):
     omega = config["omega"]
     cond = model(t,x,y)
     uncond = model(t,x,None)
-    return cond + omega * (cond - uncond)
+    return uncond + omega * (cond - uncond)
 
 def generate_image(model, x0, y1, config):
     """Generate using the Euler probability flow ODE solver."""
@@ -95,8 +95,8 @@ def generate_image(model, x0, y1, config):
     dt = 1 / n_steps
     t = 0
     for _ in range(n_steps):
+        x1 += guided_prediction(model,t,x1,y1,config) * dt
         t += dt
-        x1 += guided_prediction(model,t,x1,y1,config)
     return x1
 
 def compute_loss(model, x0, x1, y1, config):
@@ -157,7 +157,7 @@ def guided_prediction(model, t, x, y, omega = Configurable):
     """Predict with classifier-free guidance."""
     cond = model(t,x,y)
     uncond = model(t,x,None)
-    return cond + omega * (cond - uncond)
+    return uncond + omega * (cond - uncond)
 
 @configure()
 def generate_image(model, x0, y1, n_steps = Configurable):
@@ -166,9 +166,9 @@ def generate_image(model, x0, y1, n_steps = Configurable):
     dt = 1 / n_steps
     t = 0
     for _ in range(n_steps):
-        t += dt
         # no need to pass omega to guided_prediction here!
-        x1 += guided_prediction(model,t,x1,y1)
+        x1 += guided_prediction(model,t,x1,y1) * dt
+        t += dt
     return x1
 
 @configure()
@@ -220,7 +220,7 @@ def guided_prediction( model, t, x, y,
     uncond = model(t,x,None)
     diff = cond - uncond
     scale = omega * l2_norm(diff) ** alpha
-    return cond + scale * diff
+    return uncond + scale * diff
 
 def main():
     config = {
